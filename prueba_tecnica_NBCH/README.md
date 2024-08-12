@@ -14,6 +14,7 @@
 <ol style="font-size: 1.1em; color: #333; line-height: 1.6;">
   <li><code>git clone https://github.com/MtsKrummel/Prueba-Tecnica-NBCH.git</code></li>
   <li><code>cd prueba_tecnica_NBCH</code></li>
+  <li><code>cd prueba_tecnica_NBCH</code></li>
   <li><code>npm install</code></li>
   <li><code>npm run dev</code></li>
 </ol>
