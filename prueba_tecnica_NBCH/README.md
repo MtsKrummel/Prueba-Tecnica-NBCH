@@ -1,8 +1,6 @@
 <h1 align="center" style="font-size: 2.5em; color: #4A4A4A; margin-bottom: 1em;">Prueba Técnica NBCH - Krummel Matías</h1>
 <p align="center" style="font-size: 1.2em; color: #6C6C6C; max-width: 600px; margin: 0 auto;">
-  Este proyecto es una aplicación web para visualizar obras de arte utilizando la API del Instituto de Arte de Chicago.
-</p>
-<p>
+  Este proyecto es una aplicación web para visualizar obras de arte utilizando la API del Instituto de Arte de Chicago. <br>
   La aplicación permite buscar y ver detalles de diferentes obras de arte, y está construida con <strong>React</strong>, <strong>TypeScript</strong>, y <strong>Material UI</strong>.
 </p>
 <br/>
