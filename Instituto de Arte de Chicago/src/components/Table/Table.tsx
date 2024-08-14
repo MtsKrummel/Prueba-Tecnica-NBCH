@@ -9,8 +9,6 @@ import 'react-lazy-load-image-component/src/effects/blur.css';
 
 import ArtworkDetail from '../Table_Detail';
 import Search from '../Search';
-import SkeletonComponent from '../Skeleton/Skeleton';
-
 
 const ENDPOINT_ARTWORKS_IMAGE = 'https://www.artic.edu/iiif/2';
 
@@ -18,17 +16,17 @@ export default function ArtworksTable(){
   const context = useContext(ArtworksContext);
 
   if (!context) {
-    return null; // or some fallback UI
+    return null;
   }
 
-  const { isLoading, search, setSearch, validArtWorks, page, setPage, rowsPerPage, setRowsPerPage, open, selectedArtwork, handleClickOpen, handleClose } = context;
+  const { search, setSearch, validArtWorks, page, setPage, rowsPerPage, setRowsPerPage, open, selectedArtwork, handleClickOpen, handleClose } = context;
 
-  // Search function
+  // Función de busqueda
   const searcher = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
   };
 
-  // Filter data based on search
+  // Filtrar datos por busqueda
   const filteredArtWorks = !search
     ? validArtWorks
     : validArtWorks.filter((value) =>
@@ -36,12 +34,6 @@ export default function ArtworksTable(){
       );
 
   return (
-    <>
-    {
-      isLoading && (
-        <SkeletonComponent />
-      )
-    }
     <div>
       {/* buscador */}
       <Search 
@@ -63,7 +55,14 @@ export default function ArtworksTable(){
             </TableHead>
             <TableBody>
               {filteredArtWorks.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((artwork) => (
-                <TableRow key={artwork.id} hover role="checkbox" tabIndex={-1} onClick={() => handleClickOpen(artwork)}>
+                <TableRow 
+                  key={artwork.id} 
+                  hover 
+                  role="checkbox" 
+                  tabIndex={-1} 
+                  onClick={() => handleClickOpen(artwork)}
+                  className='cursor-pointer'
+                  >
                   <TableCell>
                     <LazyLoadImage
                       alt={`Artwork by ${artwork.artist_title}`}
@@ -103,6 +102,5 @@ export default function ArtworksTable(){
 
       <ArtworkDetail open={open} handleClose={handleClose} artwork={selectedArtwork} />
     </div>
-    </>
   );
 };

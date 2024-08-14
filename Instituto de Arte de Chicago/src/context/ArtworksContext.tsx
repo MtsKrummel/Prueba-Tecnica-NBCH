@@ -1,9 +1,7 @@
 import React, { createContext, useState, useEffect, ReactNode, Dispatch } from 'react';
+import getData from '../services/getArtWorks';
 
-const ENDPOINT_ARTWORKS = 'https://api.artic.edu/api/v1/artworks?fields=id,image_id,title,artist_title,date_start,description&page=1&limit=100';
-const ENDPOINT_ARTWORKS_IMAGE = 'https://www.artic.edu/iiif/2';
-
-//Interfaces
+// Interfaces
 interface Artwork {
   id: number;
   image_id: string;
@@ -19,95 +17,75 @@ interface ArtworksContextType {
   setSearch: Dispatch<React.SetStateAction<string>>;
   validArtWorks: Artwork[];
   page: number;
-  setPage: React.Dispatch<React.SetStateAction<number>>;
+  setPage: Dispatch<React.SetStateAction<number>>;
   rowsPerPage: number;
-  setRowsPerPage: React.Dispatch<React.SetStateAction<number>>;
+  setRowsPerPage: Dispatch<React.SetStateAction<number>>;
   open: boolean;
   selectedArtwork: Artwork | null;
   handleClickOpen: (artwork: Artwork) => void;
   handleClose: () => void;
 }
 
-//Validar si hay imagen
-const isValidImage = async (imageUrl: string) => {
-  try {
-    const response = await fetch(imageUrl, { method: 'HEAD' });
-    return response.ok;
-  } catch {
-    return false;
-  }
-};
-
-//Creación de contexto
+// Creación de contexto
 export const ArtworksContext = createContext<ArtworksContextType | undefined>(undefined);
 
 export const ArtworksProvider = ({ children }: { children: ReactNode }) => {
-  //Estados
-  const [search, setSearch] = useState('');
+  // Estados
+  const [search, setSearch] = useState<string>('');
   const [validArtWorks, setValidArtWorks] = useState<Artwork[]>([]);
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [isLoading, setIsLoading] = useState(true)
+  const [page, setPage] = useState<number>(0);
+  const [rowsPerPage, setRowsPerPage] = useState<number>(10);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   // Mostrar detalle
-  const [open, setOpen] = useState(false);
-  const [selectedArtwork, setSelectedArtwork] = useState(null);
+  const [open, setOpen] = useState<boolean>(false);
+  const [selectedArtwork, setSelectedArtwork] = useState<Artwork | null>(null);
 
-  const handleClickOpen = (artwork) => {
+  // Maneja la apertura del modal con los detalles de la obra
+  const handleClickOpen = (artwork: Artwork) => {
     setSelectedArtwork(artwork);
     setOpen(true);
   };
 
+  // Cierra el modal y resetea la obra seleccionada
   const handleClose = () => {
     setOpen(false);
     setSelectedArtwork(null);
   };
 
-  // Feching de datos
-  const getData = async () => {
-    try {
-      const response = await fetch(ENDPOINT_ARTWORKS);
-      const data = await response.json();
-      const artworks = data.data;
-
-      // Verificamos que las imagenes sean validas
-      const validArtworks = await Promise.all(artworks.map(async (artwork: Artwork) => {
-        //obtenemos imagen
-        const imageUrl = `${ENDPOINT_ARTWORKS_IMAGE}/${artwork.image_id}/full/843,/0/default.jpg`;
-
-        // validamos
-        const isValid = await isValidImage(imageUrl);
-        return isValid ? artwork : null;
-      }));
-
-      // Filtramos las imagenes
-      setValidArtWorks(validArtworks.filter((artwork) => artwork !== null) as Artwork[]);
-    } catch (error) {
-      console.error('Error fetching data:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
+  // Trae los datos de las obras y filtra imagenes invalidas
   useEffect(() => {
-    getData();
+    const fetchArtworks = async () => {
+      try {
+        const data = await getData();
+        if (data) {
+          setValidArtWorks(data.filter((artwork) => artwork !== null) as Artwork[]);
+        }
+      } catch (error) {
+        console.error('Error fetching artworks:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchArtworks();
   }, []);
 
   return (
     <ArtworksContext.Provider
-      value={{ 
+      value={{
         isLoading,
-        search, 
-        validArtWorks, 
-        page, 
-        rowsPerPage, 
-        open, 
+        search,
+        validArtWorks,
+        page,
+        rowsPerPage,
+        open,
         selectedArtwork,
-        setSearch, 
-        setPage, 
+        setSearch,
+        setPage,
         setRowsPerPage,
-        handleClickOpen, 
-        handleClose 
+        handleClickOpen,
+        handleClose,
       }}
     >
       {children}
