@@ -33,6 +33,8 @@ La aplicación permite buscar y ver detalles de diferentes obras de arte, y est�
 
 - mejorar la documentación
 
+- Verificar que no haya obras repetidas
+
 ## Borrador de Figma
 ![Menu](https://github.com/user-attachments/assets/168a807a-9c9c-47cd-adb3-87d76b76513c)
 ![Detalle](https://github.com/user-attachments/assets/88015c51-7067-4318-aa88-736f46878bbb)
